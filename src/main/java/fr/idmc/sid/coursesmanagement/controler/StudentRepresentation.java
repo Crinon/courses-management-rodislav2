@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.security.RolesAllowed;
 import javax.transaction.Transactional;
 import java.net.URI;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -40,8 +42,12 @@ public class StudentRepresentation {
     @Transactional
     @RolesAllowed("ROLE_USER")
     public ResponseEntity<?> save(@RequestBody Student studentInput) {
+
+        Set<Course> courses = new HashSet<>();
+
+
         String pwencoded = encoder.encode(studentInput.getPassword());
-        Student student2save = new Student((UUID.randomUUID().toString()),studentInput.getNom(), studentInput.getPrenom(), studentInput.getEmail(), pwencoded);
+        Student student2save = new Student((UUID.randomUUID().toString()),studentInput.getNom(), studentInput.getPrenom(), studentInput.getEmail(), pwencoded, courses);
         studentRepository.save(student2save);
         URI location = linkTo(RoomRepository.class).slash(student2save.getId()).toUri();
         return ResponseEntity.created(location).build();

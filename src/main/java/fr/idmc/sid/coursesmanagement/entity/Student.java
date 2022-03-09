@@ -2,10 +2,9 @@ package fr.idmc.sid.coursesmanagement.entity;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @RequiredArgsConstructor
@@ -20,4 +19,6 @@ public class Student {
     private String prenom;
     private String email;
     private String password;
+    @ManyToMany(mappedBy = "students", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    private Set<Course> courses = new HashSet<>();
 }
